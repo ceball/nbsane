@@ -50,8 +50,9 @@ class RunNb(pytest.Item):
 
         # TODO: config options, and also:
         # TODO: which kernel? run in pytest's or use new one (option)
-        sigh_kwargs = dict(timeout=600,
-                       allow_errors=False)
+        kwargs = dict(timeout=600,
+                      allow_errors=False,
+                      kernel_name='python3')
         ep = ExecutePreprocessor(**sigh_kwargs)
         ep.preprocess(notebook,{})
 
