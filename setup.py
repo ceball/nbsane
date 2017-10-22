@@ -5,6 +5,8 @@ import os
 import codecs
 from setuptools import setup
 
+import versioneer
+
 
 def read(fname):
     file_path = os.path.join(os.path.dirname(__file__), fname)
@@ -13,7 +15,7 @@ def read(fname):
 
 setup(
     name='pytest-nbsane',
-    version='0.0.1',
+    version=versioneer.get_version(),
     author='IOAM',
     author_email='developers@topographica.org',
     maintainer='IOAM',
