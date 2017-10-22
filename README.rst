@@ -3,12 +3,18 @@ pytest-nbsane
 =============
 
 .. image:: https://travis-ci.org/ceball/nbsane.svg?branch=master
-    :target: https://travis-ci.org/ceball/nbsane	     
+    :target: https://travis-ci.org/ceball/nbsane
     :alt: See Build Status on Travis CI
 
 .. image:: https://ci.appveyor.com/api/projects/status/reuh381xg7f9ks83/branch/master?svg=true
     :target: https://ci.appveyor.com/project/ceball/nbsane
     :alt: See Build Status on AppVeyor
+
+
+WARNING: early stage proof of concept; work in progress. Use at your
+own risk. Created with a cookiecutter and hacked stuff in til it
+worked. There's loads of cleanup left to do (and boilerplate to
+remove).
 
 Run and lint notebooks
 
@@ -38,10 +44,6 @@ Developing? Run the tests:
 pytest tests/
 
 
-WARNING: proof of concept; work in progress. Use at your own
-risk. Created with a cookiecutter and hacked stuff in til it
-worked. There's loads of cleanup left to do (and boilerplate to
-remove).
 
 
 ----

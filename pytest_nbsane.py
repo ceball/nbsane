@@ -53,7 +53,7 @@ class RunNb(pytest.Item):
         kwargs = dict(timeout=600,
                       allow_errors=False,
                       kernel_name='python3')
-        ep = ExecutePreprocessor(**sigh_kwargs)
+        ep = ExecutePreprocessor(**kwargs)
         ep.preprocess(notebook,{})
 
         # TODO: clean up this option handling
