@@ -25,6 +25,7 @@ setup(
     py_modules=['pytest_nbsane'],
     install_requires=['pytest>=3.1.1',
                       'jupyter_client',
+                      'ipython',
                       'nbformat',
                       'nbconvert',
                       'pyflakes'],
