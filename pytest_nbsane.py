@@ -52,7 +52,7 @@ class RunNb(pytest.Item):
         # TODO: which kernel? run in pytest's or use new one (option)
         kwargs = dict(timeout=600,
                       allow_errors=False,
-                      kernel_name='python3')
+                      kernel_name='python')
         ep = ExecutePreprocessor(**kwargs)
         ep.preprocess(notebook,{})
 
