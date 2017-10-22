@@ -2,12 +2,12 @@
 pytest-nbsane
 =============
 
-.. image:: https://travis-ci.org/ioam/pytest-nbsane.svg?branch=master
-    :target: https://travis-ci.org/ioam/pytest-nbsane
+.. image:: https://travis-ci.org/ceball/nbsane.svg?branch=master
+    :target: https://travis-ci.org/ceball/nbsane	     
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/ioam/pytest-nbsane?branch=master
-    :target: https://ci.appveyor.com/project/ioam/pytest-nbsane/branch/master
+.. image:: https://ci.appveyor.com/api/projects/status/reuh381xg7f9ks83/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/ceball/nbsane
     :alt: See Build Status on AppVeyor
 
 Run and lint notebooks
