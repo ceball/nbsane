@@ -23,7 +23,10 @@ setup(
     description='Run and lint notebooks',
     long_description=read('README.rst'),
     py_modules=['pytest_nbsane'],
-    install_requires=['pytest>=3.1.1'],
+    install_requires=['pytest>=3.1.1',
+                      'nbformat',
+                      'nbconvert',
+                      'pyflakes'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Pytest',
