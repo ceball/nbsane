@@ -65,7 +65,7 @@ def test_hello_ini_setting(testdir):
     # make sure that that we get a '0' exit code for the testsuite
     assert result.ret == 0
 
-_nb = """
+_nb = u"""
 {
  "cells": [
   {
@@ -90,23 +90,23 @@ _nb = """
 """
 
 def test_definitely_ran_paranoid(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"open('x','w').write('y')"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"open('x','w').write('y')"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 0
     assert open('x','r').read() == 'y'
 
 def test_rungood(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 0
 
 def test_runbad(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/0"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/0"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 1
 
 def test_rungood_html(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"42"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"42"})
 
     result = testdir.runpytest(
         '--nbsane-run',
@@ -123,11 +123,11 @@ def test_rungood_html(testdir):
     assert answer == 42
 
 def test_lintgood(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 0
 
 def test_lintbad(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"these undefined names are definitely undefined"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1 these undefined names are definitely undefined"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 1
