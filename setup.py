@@ -24,6 +24,7 @@ setup(
     long_description=read('README.rst'),
     py_modules=['pytest_nbsane'],
     install_requires=['pytest>=3.1.1',
+                      'jupyter_client',
                       'nbformat',
                       'nbconvert',
                       'pyflakes'],
