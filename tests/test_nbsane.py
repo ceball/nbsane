@@ -123,7 +123,7 @@ def test_rungood_html(testdir):
     assert answer == 42
 
 def test_lintgood(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 0
 
