@@ -2,6 +2,8 @@
 
 import os
 import re
+import io
+import sys
 
 def test_bar_fixture(testdir):
     """Make sure that pytest accepts our fixture."""
@@ -65,7 +67,7 @@ def test_hello_ini_setting(testdir):
     # make sure that that we get a '0' exit code for the testsuite
     assert result.ret == 0
 
-_nb = u"""
+_nb = u'''
 {
  "cells": [
   {
@@ -75,6 +77,15 @@ _nb = u"""
    "outputs": [],
    "source": [
     "%(the_source)s"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "u\\"中国\\""
    ]
   }
  ],
@@ -87,26 +98,27 @@ _nb = u"""
  "nbformat": 4,
  "nbformat_minor": 2
 }
-"""
+'''
 
 def test_definitely_ran_paranoid(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"open('x','w').write('y')"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"open('x','w').write('y')"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 0
-    assert open('x','r').read() == 'y'
+    with open('x','r') as f:
+        assert f.read() == 'y'
 
 def test_rungood(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 0
 
 def test_runbad(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/0"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/0"})
     result = testdir.runpytest('--nbsane-run','-v')
     assert result.ret == 1
 
 def test_rungood_html(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"42"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"42"})
 
     result = testdir.runpytest(
         '--nbsane-run',
@@ -115,19 +127,25 @@ def test_rungood_html(testdir):
     assert result.ret == 0
 
     # test that html has happened
-    answer = None
-    with open(os.path.join(testdir.tmpdir.strpath,'testing123.ipynb.html')) as f:
+    targets = [
+        "<pre>42</pre>",
+                                               # note: this is really what happens in a python2 notebook
+        "<pre>&#39;中国&#39;</pre>" if sys.version_info[0]==3 else r"<pre>u&#39;\u4e2d\u56fd&#39;</pre>"]
+    answer = [None,None]
+    x = os.path.join(testdir.tmpdir.strpath,'testing123.ipynb.html')
+    with io.open(x,encoding='utf8') as f:
         for line in f:
-            if re.search("<pre>42</pre>", line):
-                answer = 42
-    assert answer == 42
+            for i,target in enumerate(targets):
+                if target in line:
+                    answer[i] = 42
+    assert answer == [42,42]
 
 def test_lintgood(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 0
 
 def test_lintbad(testdir):
-    testdir.makefile('.ipynb', testing123=_nb%{'the_source':u"1/1 these undefined names are definitely undefined"})
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1 these undefined names are definitely undefined"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 1

@@ -3,6 +3,8 @@
 import pytest
 import re
 import os
+import io
+import sys
 
 def pytest_addoption(parser):
     group = parser.getgroup('nbsane')
@@ -46,39 +48,41 @@ from nbconvert.preprocessors import ExecutePreprocessor
 
 class RunNb(pytest.Item):
     def runtest(self):
-        notebook = nbformat.read(open(self.name), as_version=4)
+        with io.open(self.name,encoding='utf8') as nb:
+            notebook = nbformat.read(nb, as_version=4)
 
-        # TODO: config options, and also:
-        # TODO: which kernel? run in pytest's or use new one (option)
-        kwargs = dict(timeout=600,
-                      allow_errors=False,
-                      kernel_name='python')
-        ep = ExecutePreprocessor(**kwargs)
-        ep.preprocess(notebook,{})
+            # TODO: config options, and also:
+            # TODO: which kernel? run in pytest's or use new one (option)
+            kwargs = dict(timeout=600,
+                          allow_errors=False,
+                          # or sys.version_info[1] ?
+                          kernel_name='python')
+            ep = ExecutePreprocessor(**kwargs)
+            ep.preprocess(notebook,{})
 
-        # TODO: clean up this option handling
-        if self.parent.parent.config.option.store_html != '':
-            he = nbconvert.HTMLExporter()
-            # could maybe use this for chance of testing the html? but not the aim of this project
-            #he.template_file = 'basic'
-            body, resources = he.from_notebook_node(notebook)
-            # TODO: quick hack, and not cross platform
-            open(os.path.join(self.parent.parent.config.option.store_html,os.path.basename(self.name)+'.html'),'w').write(body)
+            # TODO: clean up this option handling
+            if self.parent.parent.config.option.store_html != '':
+                he = nbconvert.HTMLExporter()
+                # could maybe use this for chance of testing the html? but not the aim of this project
+                #he.template_file = 'basic'
+                html, resources = he.from_notebook_node(notebook)
+                # TODO: quick hack, and not cross platform
+                with io.open(os.path.join(self.parent.parent.config.option.store_html,os.path.basename(self.name)+'.html'),'w') as f:
+                    f.write(html)
 
 
-import pyflakes.api as PF
+import pyflakes.api as flakes
 class LintNb(pytest.Item):
     def runtest(self):
-        notebook = nbformat.read(open(self.name), as_version=4)
-
-        pe = nbconvert.PythonExporter()
-        python, resources = pe.from_notebook_node(notebook)
-
-        # TODO: I've previously handled magics; should add that back
-
-        resu = PF.check(python,self.name)
-        if resu!=0:
-            raise AssertionError
+        with io.open(self.name,encoding='utf8') as nb:
+            pe = nbconvert.PythonExporter()
+            py, resources = pe.from_notebook_node(nbformat.read(nb, as_version=4))
+            # TODO: I've previously handled magics; should add that back
+            if sys.version_info[0]==2:
+                # notebooks will start with "coding: utf-8", but py already unicode
+                py = py.encode('utf8')
+            if flakes.check(py,self.name) != 0:
+                raise AssertionError
 
 
 class IPyNbFile(pytest.File):
