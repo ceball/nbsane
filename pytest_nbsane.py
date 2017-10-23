@@ -71,13 +71,22 @@ class RunNb(pytest.Item):
                     f.write(html)
 
 
+def _insert_get_ipython(nb):
+    # so pyflakes doesn't get confused about magics, and also doesn't
+    # complain about this if magics not present.
+    if len(nb['cells']) > 0:
+        get_ipython_cell = nb['cells'][0].copy()
+        get_ipython_cell.source = 'from IPython import get_ipython\nget_ipython()'
+        nb['cells'].insert(0,get_ipython_cell)
+
+
 import pyflakes.api as flakes
 class LintNb(pytest.Item):
     def runtest(self):
-        with io.open(self.name,encoding='utf8') as nb:
-            pe = nbconvert.PythonExporter()
-            py, resources = pe.from_notebook_node(nbformat.read(nb, as_version=4))
-            # TODO: I've previously handled magics; should add that back
+        with io.open(self.name,encoding='utf8') as nbfile:
+            nb = nbformat.read(nbfile, as_version=4)
+            _insert_get_ipython(nb)
+            py, resources = nbconvert.PythonExporter().from_notebook_node(nb)
             if sys.version_info[0]==2:
                 # notebooks will start with "coding: utf-8", but py already unicode
                 py = py.encode('utf8')

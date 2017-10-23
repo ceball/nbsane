@@ -84,6 +84,25 @@ _nb = u'''
    "metadata": {},
    "outputs": [],
    "source": [
+    "%%env"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "%%%%writefile sigh",
+    "1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
     "u\\"中国\\""
    ]
   }
@@ -105,6 +124,7 @@ def test_definitely_ran_paranoid(testdir):
     assert result.ret == 0
     with open('x','r') as f:
         assert f.read() == 'y'
+    assert os.path.isfile('sigh')
 
 def test_rungood(testdir):
     testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1"})
