@@ -93,7 +93,7 @@ _nb = u'''
    "metadata": {},
    "outputs": [],
    "source": [
-    "%%%%writefile sigh",
+    "%%%%writefile sigh\\n",
     "1"
    ]
   },
