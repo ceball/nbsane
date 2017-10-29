@@ -16,7 +16,7 @@ own risk. Created with a cookiecutter and hacked stuff in til it
 worked. There's loads of cleanup left to do (and boilerplate to
 remove).
 
-Run and lint notebooks
+Run and lint notebooks.
 
 Basic ("non data") notebook testing: run ok? no lint?
 
