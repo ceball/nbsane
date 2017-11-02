@@ -10,7 +10,6 @@ pytest-nbsane
     :target: https://ci.appveyor.com/project/ceball/nbsane
     :alt: See Build Status on AppVeyor
 
-
 WARNING: early stage proof of concept; work in progress. Use at your
 own risk. Created with a cookiecutter and hacked stuff in til it
 worked. There's loads of cleanup left to do (and boilerplate to
