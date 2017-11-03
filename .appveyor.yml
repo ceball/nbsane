@@ -22,8 +22,6 @@ install:
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - cmd: chcp 65001
-  - cmd: set PYTHONIOENCODING=utf-8
   - cmd: "%PYTHON%/Scripts/tox -e %TOX_ENV%"
 
 after_test:
