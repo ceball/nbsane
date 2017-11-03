@@ -22,8 +22,9 @@ install:
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  - chcp 65001
-  - "%PYTHON%/Scripts/tox -e %TOX_ENV%"
+  - cmd: chcp 65001
+  - cmd: set PYTHONIOENCODING=utf-8
+  - cmd: "%PYTHON%/Scripts/tox -e %TOX_ENV%"
 
 after_test:
   - "%PYTHON%/python setup.py bdist_wheel --universal"
