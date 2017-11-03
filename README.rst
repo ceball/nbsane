@@ -38,8 +38,8 @@ Lint check notebooks:
 pytest --nbsane-lint notebooks/
 
 Specifying options, use 'ini' e.g. setup.cfg or tox.ini or pytest.ini:
-cell_timeout
-
+cell_timeout: seconds allowed per cell (see nbconvert timeout)
+it_is_nb_file: case insensitive re to match for file to be considered notebook; defaults to ``^.*\.ipynb``
 
 Developing? Run the tests:
 

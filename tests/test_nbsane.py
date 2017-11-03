@@ -39,7 +39,7 @@ def test_help_message(testdir):
     ])
 
 
-def test_hello_ini_setting(testdir):
+def test_cell_timeout_ini_setting(testdir):
     testdir.makeini("""
         [pytest]
         cell_timeout = 300
@@ -66,6 +66,29 @@ def test_hello_ini_setting(testdir):
     # make sure that that we get a '0' exit code for the testsuite
     assert result.ret == 0
 
+
+
+    testdir.makepyfile("""
+        import pytest
+
+        @pytest.fixture
+        def cell_timeout(request):
+            return request.config.getini('cell_timeout')
+
+        def test_cell_timeout(cell_timeout):
+            assert int(cell_timeout) == 300
+    """)
+
+    result = testdir.runpytest('-v')
+
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        '*::test_cell_timeout PASSED',
+    ])
+
+    # make sure that that we get a '0' exit code for the testsuite
+    assert result.ret == 0
+    
 _nb = u'''
 {
  "cells": [
@@ -168,3 +191,13 @@ def test_lintbad(testdir):
     testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/1 these undefined names are definitely undefined"})
     result = testdir.runpytest('--nbsane-lint','-v')
     assert result.ret == 1
+
+def test_it_is_nbfile(testdir):
+    testdir.makeini("""
+        [pytest]
+        it_is_nb_file = ^.*\.something$
+    """)
+
+    testdir.makefile('.ipynb', testing123=_nb%{'the_source':"1/0"})
+    result = testdir.runpytest('--nbsane-run','-v')
+    assert result.ret == 5

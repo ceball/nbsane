@@ -38,6 +38,7 @@ def pytest_addoption(parser):
     )
 
     parser.addini('cell_timeout', 'nbconvert cell timeout')
+    parser.addini('it_is_nb_file', 're to determine whether file is notebook')
 
 
 @pytest.fixture
@@ -110,7 +111,11 @@ def pytest_collect_file(path, parent):
     opt = parent.config.option
     # TODO: Make this pattern standard/configurable.
     # match .ipynb except .nbval.ipynb
-    if re.match("^((?!\.nbval).)*\.ipynb$",path.strpath,re.IGNORECASE):
+    it_is_nb_file = parent.config.getini('it_is_nb_file')
+    if it_is_nb_file == '':
+        #"^((?!\.nbval).)*\.ipynb$"
+        it_is_nb_file = "^.*\.ipynb"
+    if re.match(it_is_nb_file,path.strpath,re.IGNORECASE):
         if opt.nbsane_run or opt.nbsane_lint:
             # TODO express via the options system if you ever figure it out
             assert opt.nbsane_run ^ opt.nbsane_lint
