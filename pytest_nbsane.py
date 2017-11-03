@@ -71,8 +71,7 @@ class RunNb(pytest.Item):
                 # could maybe use this for chance of testing the html? but not the aim of this project
                 #he.template_file = 'basic'
                 html, resources = he.from_notebook_node(notebook)
-                # TODO: quick hack, and not cross platform
-                with io.open(os.path.join(self.parent.parent.config.option.store_html,os.path.basename(self.name)+'.html'),'w') as f:
+                with io.open(os.path.join(self.parent.parent.config.option.store_html,os.path.basename(self.name)+'.html'),'w',encoding='utf8') as f:
                     f.write(html)
 
 
