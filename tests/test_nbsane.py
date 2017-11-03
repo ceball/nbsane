@@ -42,25 +42,25 @@ def test_help_message(testdir):
 def test_hello_ini_setting(testdir):
     testdir.makeini("""
         [pytest]
-        HELLO = world
+        cell_timeout = 300
     """)
 
     testdir.makepyfile("""
         import pytest
 
         @pytest.fixture
-        def hello(request):
-            return request.config.getini('HELLO')
+        def cell_timeout(request):
+            return request.config.getini('cell_timeout')
 
-        def test_hello_world(hello):
-            assert hello == 'world'
+        def test_cell_timeout(cell_timeout):
+            assert int(cell_timeout) == 300
     """)
 
     result = testdir.runpytest('-v')
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        '*::test_hello_world PASSED',
+        '*::test_cell_timeout PASSED',
     ])
 
     # make sure that that we get a '0' exit code for the testsuite

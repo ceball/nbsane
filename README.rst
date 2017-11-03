@@ -37,6 +37,9 @@ Lint check notebooks:
 
 pytest --nbsane-lint notebooks/
 
+Specifying options, use 'ini' e.g. setup.cfg or tox.ini or pytest.ini:
+cell_timeout
+
 
 Developing? Run the tests:
 

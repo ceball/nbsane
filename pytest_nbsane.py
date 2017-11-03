@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Note: created with cookiecutter by someone with no experience of how
+# to make a pytest plugin. Please question anything related to the
+# pytest integration!
+
 import pytest
 import re
 import os
@@ -33,7 +37,7 @@ def pytest_addoption(parser):
         help='Set the value for the fixture "bar".'
     )
 
-    parser.addini('HELLO', 'Dummy pytest.ini setting')
+    parser.addini('cell_timeout', 'nbconvert cell timeout')
 
 
 @pytest.fixture
@@ -51,9 +55,9 @@ class RunNb(pytest.Item):
         with io.open(self.name,encoding='utf8') as nb:
             notebook = nbformat.read(nb, as_version=4)
 
-            # TODO: config options, and also:
-            # TODO: which kernel? run in pytest's or use new one (option)
-            kwargs = dict(timeout=600,
+            # TODO: which kernel? run in pytest's or use new one (make it option)
+            _timeout = self.parent.parent.config.getini('cell_timeout')
+            kwargs = dict(timeout=int(_timeout) if _timeout!='' else 300,
                           allow_errors=False,
                           # or sys.version_info[1] ?
                           kernel_name='python')
