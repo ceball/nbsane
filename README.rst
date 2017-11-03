@@ -42,7 +42,7 @@ cell_timeout: seconds allowed per cell (see nbconvert timeout)
 it_is_nb_file: case insensitive re to match for file to be considered notebook; defaults to ``^.*\.ipynb``
 
 Developing? Run the tests:
-
+pip install -e .
 pytest tests/
 
 
